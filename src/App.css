@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css?family=Rubik');
+@import url('https://fonts.googleapis.com/css?family=Chango');
+* {
+    box-sizing: border-box;
+    font-family: 'Rubik';
+}
+
+body {
+    margin: 0;
+}
+
+.nav {
+    background-color: rgb(64, 192, 255);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 2rem;
+    padding: 0 1rem
+}
+
+.site-title {
+    font-size: 2rem;
+    font-weight: bolder;
+    font-family: "Rubik";
+}
+
+.nav ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    gap: 1rem
+}
+
+.nav a {
+    color: inherit;
+    text-decoration: none;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0.25rem
+}
+
+.nav li {
+    transition: 0.2s;
+}
+
+.nav li:hover {
+    transform: scale(1.05);
+}
+
+.gameContainer {
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    flex-flow: row wrap;
+    padding-top: 2rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.gameContainer > a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.gameImg {
+    height: 80%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.gameImg > img {
+    border-radius: 1rem 1rem 0 0;
+    height: 125%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.gameName {
+    position: relative;
+    z-index: 10;
+    height: 20%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.9rem;
+    border-radius: 0.75rem 0.75rem 0 0;
+    border: 1px solid black;
+    background-color: white;
+}
+
+.game {
+    margin: 1vh;
+    width: 15rem;
+    height: 15rem;
+    border-radius: 1rem 1rem 0 0;
+    border: 2px solid black;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.game:hover {
+    transform: scale(0.95);
+}

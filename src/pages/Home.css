@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css?family=Rubik');
+@import url('https://fonts.googleapis.com/css?family=Chango');
+* {
+    font-family: 'Rubik';
+}
+
+.homeMain {
+    margin: 1.25rem;
+    margin-left: 2rem;
+}
+
+.homeTitle {
+    font-size: 4rem;
+    float: left;
+    font-weight: bolder;
+    user-select: none;
+}
+
+.loginButtons {
+    position: absolute;
+    right: 3rem;
+    top: 2.25rem;
+    font-size: 1.5rem;
+}
+
+.loginButtons > * {
+    border: none;
+    width: 7rem;
+    height: 3rem;
+    transition: 0.2s;
+}
+
+.loginButtons > *:hover {
+    transform: scale(0.95);
+    filter: brightness(115%);
+}
+
+.signupButton {
+    background-color: rgb(0, 192, 255);
+    color: white;
+    margin-left: 1rem;
+    border-radius: 5px;
+}
+
+.loginButton {
+    background-color: rgb(192, 192, 192);
+    border-radius: 5px
+}
+
+/* @media (max-width: 768px) and (orientation: portrait), (max-height: 768px) and (orientation: landscape) {
+    * {
+        color: white;
+        background-color: #8000ff;
+    }
+} */

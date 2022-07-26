@@ -1,0 +1,261 @@
+html,
+body,
+#root {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.unoContainer {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 3.5rem);
+}
+
+.errorContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.error {
+    margin: 2rem;
+    height: 3.5rem;
+    width: 15rem;
+    background-color: #ffc0c0;
+    border: 2px solid #ff0000;
+    border-radius: 10px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.lobby {
+    width: 100%;
+}
+
+.unoCard {
+    width: calc(135px/2);
+    height: calc(194px/2);
+}
+
+.unoCard[data-canplay="true"] {
+    cursor: pointer;
+    border-radius: 12px;
+    transition: 0.2s;
+}
+
+.unoCard[data-canplay="true"]:hover {
+    transform: scale(1.05);
+}
+
+.unoCard[data-canplay="true"][data-color="r"] {
+    border: 3px solid red;
+    background-color: red;
+}
+
+.unoCard[data-canplay="true"][data-color="y"] {
+    border: 3px solid #FFAA00;
+    background-color: #FFAA00;
+}
+
+.unoCard[data-canplay="true"][data-color="g"] {
+    border: 3px solid green;
+    background-color: green;
+}
+
+.unoCard[data-canplay="true"][data-color="b"] {
+    border: 3px solid blue;
+    background-color: blue;
+}
+
+.unoCard[data-canplay="true"][data-color="w"] {
+    border: 3px solid black;
+    background-color: black;
+}
+
+.deck {
+    display: inline-block;
+    text-align: center;
+    margin: 5px;
+    border: none;
+    border-radius: 4px;
+    border: 1px solid black;
+}
+
+.deck[data-active="true"][data-color="r"] {
+    border: 2px solid red;
+    background-color: #ff9999;
+}
+
+.deck[data-active="true"][data-color="y"] {
+    border: 2px solid #FFAA00;
+    background-color: hsl(40, 100%, 90%);
+}
+
+.deck[data-active="true"][data-color="g"] {
+    border: 2px solid green;
+    background-color: hsl(120, 100%, 90%);
+}
+
+.deck[data-active="true"][data-color="b"] {
+    border: 2px solid blue;
+    background-color: hsl(240, 100%, 90%);
+}
+
+.opponent[data-side="left"] {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    left: 1rem;
+    top: 130px;
+    position: absolute;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    justify-content: center;
+    /* width: 402px; */
+    width: 350px;
+    height: 77;
+    max-height: 120px;
+}
+
+.opponent[data-side="right"] {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    right: 1rem;
+    top: 130px;
+    position: absolute;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    justify-content: center;
+    /* width: 402px; */
+    width: 350px;
+    height: 77;
+    max-height: 120px;
+}
+
+.opponent[data-side="top"] {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    left: 0;
+    right: 0;
+    top: 0.25rem;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    justify-content: center;
+    /* width: 402px; */
+    width: 350px;
+    height: 77;
+    max-height: 120px;
+}
+
+.only.opponent[data-side="top"] {
+    width: 470px;
+}
+
+.playerDeck {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    left: 0;
+    right: 0;
+    bottom: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    justify-content: center;
+    /* width: 402px; */
+    width: 710px;
+    height: 77;
+    max-height: 120px;
+}
+
+.opponent>.unoCard {
+    width: calc(135px/3);
+    height: calc(194px/3);
+}
+
+.pilesContainer * {
+    width: calc(135px/1.5);
+    height: calc(194px/1.5);
+    margin: 0.5rem;
+}
+
+.piles {
+    position: absolute;
+    top: 0;
+    bottom: 4rem;
+    left: 0;
+    right: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+    height: fit-content;
+}
+
+.drawPile[data-active="true"]:hover {
+    cursor: pointer;
+    transform: scale(1.1111111111111111111111111);
+    border: 5px solid black;
+    border-radius: 18px;
+    background-color: black;
+}
+
+.pilesContainer {
+    position: relative;
+    width: fit-content;
+    height: fit-content;
+}
+
+.drawText {
+    position: absolute;
+    left: 0;
+    top: calc(200px/1.5);
+}
+
+.eventMessage {
+    position: absolute;
+    bottom: 11rem;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.unoUser {
+    position: absolute;
+    bottom: 1rem;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.deck::-webkit-scrollbar {
+    width: 5px;
+    border-radius: 10px;
+}
+
+.deck::-webkit-scrollbar-track {
+    background: none;
+    border-radius: 5px;
+}
+
+.deck::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.deck::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
