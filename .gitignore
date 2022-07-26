@@ -4,6 +4,7 @@ backend/
 BJ/
 chess/
 Game Testing/
+dist/
 
 # Logs
 logs
