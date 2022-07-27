@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { v4 as uuid } from "uuid";
+import { v4 as uuid, NIL as nil } from "uuid";
 import "./Uno.css";
 
 const Homepage = () => {
@@ -19,7 +19,7 @@ const Homepage = () => {
             </div>
             <h1>OR</h1>
             <div className='homepage-create'>
-                <Link to={`play?host=${uuid()}`}><button className="game-button orange">CREATE GAME</button></Link>
+                <Link to={`play?host=${nil}`}><button className="game-button orange">CREATE GAME</button></Link>
             </div>
         </>
     )

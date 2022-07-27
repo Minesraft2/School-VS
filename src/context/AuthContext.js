@@ -15,7 +15,10 @@ export const AuthProvider = ({ children }) => {
     async function signup(email, password, username) {
         const cred = await auth.createUserWithEmailAndPassword(email, password);
         db.collection('userdata').doc(cred.user.uid).set({
-            username, "gam-bits": 5000, team: Math.round(Math.random())
+            username,
+            "gam-bits": 5000,
+            team: Math.round(Math.random()),
+            createdAt: new Date(Date.now())
         });
         return cred;
     }
@@ -50,18 +53,19 @@ export const AuthProvider = ({ children }) => {
 
     async function getUserData(uid) {
         let snapshot = await db.collection('userdata').doc(uid).get();
-        if (!snapshot.exists) db.collection('userdata').doc(uid).set({ "gam-bits": 5000, team: Math.round(Math.random()) });
+        if (!snapshot.exists) db.collection('userdata').doc(uid).set({ "gam-bits": 5000, team: Math.round(Math.random()), createdAt: new Date(Date.now()) });
         snapshot = await db.collection('userdata').doc(uid).get();
         return snapshot.data();
     }
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
-            console.log("Logged In:", user != null);
+            console.log("Logged In:", String(user != null));
             setCurrentUser(user);
             setLoading(false);
             if (user != null) getUserData(user.uid).then(setUserData);
         });
+        window.db = db;
         return unsubscribe;
     }, []);
 

@@ -138,7 +138,9 @@ const Game = (props) => {
             unoCalled != null && setUnoCalled(unoCalled);
             reversed != null && setReversed(reversed);
         });
-        socket.on('roomData', ({ users }) => {
+        socket.on('roomData', ({ users, room: host }) => {
+            setSearchParams({ host });
+            setRoom(host);
             setUser(users);
         });
         socket.on('currentUserData', ({ player, host }) => {
