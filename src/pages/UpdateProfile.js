@@ -8,7 +8,8 @@ const UpdateProfile = (props) => {
     const emailRef = useRef();
     const passwordRef = useRef();
     const passwordConfirmRef = useRef();
-    const { currentUser, updateEmail, updatePassword } = useAuth();
+    const usernameRef = useRef();
+    const { currentUser, updateEmail, updatePassword, updateUsername } = useAuth();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -18,6 +19,7 @@ const UpdateProfile = (props) => {
         const promises = [];
         if (emailRef.current.value !== currentUser.email) promises.push(updateEmail(emailRef.current.value));
         if (passwordRef.current.value) promises.push(updatePassword(passwordRef.current.value));
+        if (usernameRef.current.value) promises.push(updateUsername(usernameRef.current.value));
         setLoading(true);
         setError('');
         Promise.all(promises).then(() => {
@@ -31,9 +33,13 @@ const UpdateProfile = (props) => {
                     <h2 className="text-center mb-4">Update Profile</h2>
                     {error && <Alert variant="danger">{error}</Alert>}
                     <Form onSubmit={handleSubmit}>
+                        <Form.Group id="username">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control ref={usernameRef} defaultValue={currentUser.displayName} placeholder="New Username" />
+                        </Form.Group>
                         <Form.Group id="email">
                             <Form.Label>Email</Form.Label>
-                            <Form.Control type="email" ref={emailRef} required defaultValue={currentUser.email} />
+                            <Form.Control type="email" ref={emailRef} placeholder="New Email"/>
                         </Form.Group>
                         <Form.Group id="update-password">
                             <Form.Label>Password</Form.Label>

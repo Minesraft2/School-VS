@@ -12,10 +12,10 @@ export const AuthProvider = ({ children }) => {
     const [userData, setUserData] = useState();
     const [loading, setLoading] = useState(true);
 
-    async function signup(email, password, username) {
+    async function signup(email, password, displayName) {
         const cred = await auth.createUserWithEmailAndPassword(email, password);
+        if(auth.currentUser != null) auth.currentUser.updateProfile({displayName});
         db.collection('userdata').doc(cred.user.uid).set({
-            username,
             "gam-bits": 5000,
             team: Math.round(Math.random()),
             createdAt: new Date(Date.now())
@@ -41,6 +41,10 @@ export const AuthProvider = ({ children }) => {
 
     function updatePassword(password) {
         return currentUser.updatePassword(password);
+    }
+
+    function updateUsername(displayName) {
+        return currentUser.updateProfile({ displayName });
     }/* 
 
     async function getUserData(uid) {
@@ -70,11 +74,12 @@ export const AuthProvider = ({ children }) => {
             if (user != null) getUserData(user.uid).then(setUserData);
         });
         window.db = db;
+        window.auth = auth;
         return unsubscribe;
     }, []);
 
     return (
-        <AuthContext.Provider value={{ currentUser, userData, login, signup, logout, resetPassword, updateEmail, updatePassword, getUserData, updateUserData }}>
+        <AuthContext.Provider value={{ currentUser, userData, login, signup, logout, resetPassword, updateEmail, updatePassword, updateUsername, getUserData, updateUserData }}>
             {!loading && children}
         </AuthContext.Provider>
     )
