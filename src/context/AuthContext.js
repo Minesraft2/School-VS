@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
 const AuthContext = createContext();
 
 export function useAuth() {
@@ -9,10 +9,15 @@ export function useAuth() {
 
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState();
+    const [userData, setUserData] = useState();
     const [loading, setLoading] = useState(true);
 
-    function signup(email, password) {
-        return auth.createUserWithEmailAndPassword(email, password);
+    async function signup(email, password, username) {
+        const cred = await auth.createUserWithEmailAndPassword(email, password);
+        db.collection('userdata').doc(cred.user.uid).set({
+            username, "gam-bits": 5000, team: Math.round(Math.random())
+        });
+        return cred;
     }
 
     function login(email, password) {
@@ -33,17 +38,34 @@ export const AuthProvider = ({ children }) => {
 
     function updatePassword(password) {
         return currentUser.updatePassword(password);
+    }/* 
+
+    async function getUserData(uid) {
+        let snapshot = await db.collection('userdata').doc(uid).get();
+        if (!snapshot.exists) await db.collection('userdata').doc(uid).set({ "gam-bits": 5000, team: Math.round(Math.random()) });
+        snapshot = await db.collection('userdata').doc(uid).get();
+        window.test = [db.collection('userdata'), snapshot];
+        return snapshot.data();
+    } */
+
+    async function getUserData(uid) {
+        let snapshot = await db.collection('userdata').doc(uid).get();
+        if (!snapshot.exists) db.collection('userdata').doc(uid).set({ "gam-bits": 5000, team: Math.round(Math.random()) });
+        snapshot = await db.collection('userdata').doc(uid).get();
+        return snapshot.data();
     }
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
+            console.log("Logged In:", user != null);
             setCurrentUser(user);
             setLoading(false);
+            if (user != null) getUserData(user.uid).then(setUserData);
         });
-        return unsubscribe
-    }, [])
+        return unsubscribe;
+    }, []);
 
-    const value = { currentUser, login, signup, logout, resetPassword, updateEmail, updatePassword }
+    const value = { currentUser, userData, login, signup, logout, resetPassword, updateEmail, updatePassword, getUserData }
 
     return (
         <AuthContext.Provider value={value}>
