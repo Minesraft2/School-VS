@@ -22,7 +22,7 @@ const UpdateProfile = (props) => {
         setError('');
         Promise.all(promises).then(() => {
             navigate('/settings');
-        }).catch(() => setError("Failed to update account")).finally(() => setLoading(false));
+        }).catch((err) => setError(err.code == "auth/requires-recent-login" ? "This action requires a recent login." : "Failed to update account.")).finally(() => setLoading(false));
     }
     return (
         <>
@@ -35,11 +35,11 @@ const UpdateProfile = (props) => {
                             <Form.Label>Email</Form.Label>
                             <Form.Control type="email" ref={emailRef} required defaultValue={currentUser.email} />
                         </Form.Group>
-                        <Form.Group id="password">
+                        <Form.Group id="update-password">
                             <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" ref={passwordRef} placeholder="Leave blank to leave the same" />
+                            <Form.Control type="password" ref={passwordRef} autoComplete="new-password" placeholder="Leave blank to leave the same" />
                         </Form.Group>
-                        <Form.Group id="password-confirm">
+                        <Form.Group id="update-password-confirm">
                             <Form.Label>Password Confirmation</Form.Label>
                             <Form.Control type="password" ref={passwordConfirmRef} placeholder="Confirm Password" />
                         </Form.Group>
