@@ -14,8 +14,9 @@ export const AuthProvider = ({ children }) => {
 
     async function signup(email, password, displayName) {
         const cred = await auth.createUserWithEmailAndPassword(email, password);
-        if(auth.currentUser != null) auth.currentUser.updateProfile({displayName});
+        cred.user?.updateProfile({ displayName });
         db.collection('userdata').doc(cred.user.uid).set({
+            username: displayName,
             "gam-bits": 5000,
             team: Math.round(Math.random()),
             createdAt: new Date(Date.now())
@@ -43,7 +44,8 @@ export const AuthProvider = ({ children }) => {
         return currentUser.updatePassword(password);
     }
 
-    function updateUsername(displayName) {
+    async function updateUsername(displayName) {
+        await updateUserData({ username: displayName });
         return currentUser.updateProfile({ displayName });
     }/* 
 
@@ -57,13 +59,18 @@ export const AuthProvider = ({ children }) => {
 
     async function getUserData(uid) {
         let snapshot = await db.collection('userdata').doc(uid).get();
-        if (!snapshot.exists) db.collection('userdata').doc(uid).set({ "gam-bits": 5000, team: Math.round(Math.random()), createdAt: new Date(Date.now()) });
+        if (!snapshot.exists) db.collection('userdata').doc(uid).set({ username: auth.currentUser.displayName, "gam-bits": 5000, team: Math.round(Math.random()), createdAt: new Date(Date.now()) });
         snapshot = await db.collection('userdata').doc(uid).get();
         return snapshot.data();
     }
 
-    async function updateUserData(data) {
+    function updateUserData(data) {
         return db.collection('userdata').doc(uid).update(data);
+    }
+
+    async function getAllUsers() {
+        const snapshot = await db.collection('userdata').get();
+        return snapshot.docs.map(doc => doc.data());
     }
 
     useEffect(() => {
@@ -79,7 +86,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ currentUser, userData, login, signup, logout, resetPassword, updateEmail, updatePassword, updateUsername, getUserData, updateUserData }}>
+        <AuthContext.Provider value={{ currentUser, userData, login, signup, logout, resetPassword, updateEmail, updatePassword, updateUsername, getUserData, updateUserData, getAllUsers }}>
             {!loading && children}
         </AuthContext.Provider>
     )
