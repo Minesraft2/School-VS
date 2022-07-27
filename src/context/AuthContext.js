@@ -58,6 +58,10 @@ export const AuthProvider = ({ children }) => {
         return snapshot.data();
     }
 
+    async function updateUserData(data) {
+        return db.collection('userdata').doc(uid).update(data);
+    }
+
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             console.log("Logged In:", String(user != null));
@@ -69,10 +73,8 @@ export const AuthProvider = ({ children }) => {
         return unsubscribe;
     }, []);
 
-    const value = { currentUser, userData, login, signup, logout, resetPassword, updateEmail, updatePassword, getUserData }
-
     return (
-        <AuthContext.Provider value={value}>
+        <AuthContext.Provider value={{ currentUser, userData, login, signup, logout, resetPassword, updateEmail, updatePassword, getUserData, updateUserData }}>
             {!loading && children}
         </AuthContext.Provider>
     )
