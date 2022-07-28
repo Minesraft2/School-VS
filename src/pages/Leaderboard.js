@@ -43,6 +43,7 @@ const Leaderboard = (props) => {
                         {
                             users.sort(({ "gam-bits": gambitsA }, { "gam-bits": gambitsB }) => gambitsB - gambitsA).map(({ username, "gam-bits": gambits, team, createdAt: { seconds } }, index) => {
                                 return (
+                                    index <= 9 &&
                                     <tr className={username == currentUser.displayName ? "active" : ''} key={index}>
                                         <td>{index + 1}</td>
                                         <td>{username}</td>
