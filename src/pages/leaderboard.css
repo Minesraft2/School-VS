@@ -21,7 +21,7 @@
 .leaderboard thead tr {
     background-color: rgb(64, 192, 255);
     color: white;
-    text-align: left;
+    text-align: center;
     font-weight: bold;
 }
 
@@ -66,4 +66,9 @@
     margin-top: 1rem;
     font-size: 4rem;
     font-weight: bolder;
+}
+
+.leaderboardWrapper {
+    position: relative;
+    height: min(0, 820px)
 }
