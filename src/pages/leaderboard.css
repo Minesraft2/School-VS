@@ -67,7 +67,7 @@
     border-bottom: 1px solid #ddd;
 }
 
-.leaderboard tbody tr:nth-last-of-type(even) {
+.leaderboard tbody tr:nth-of-type(even) {
     background-color: #f3f3f3;
 }
 
