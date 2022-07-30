@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Nav from "../Nav";
 import { useAuth } from "../context/AuthContext";
 import "./leaderboard.css";
@@ -18,11 +19,31 @@ const relatime = (elapsed) => {
 };
 const Leaderboard = (props) => {
     const [users, setUsers] = useState([]);
+    const [sort, setSort] = useState('');
     const { currentUser, getAllUsers } = useAuth();
-    console.log(currentUser, getAllUsers());
+    const [params, setParams] = useSearchParams();
+    const navigate = useNavigate();
     useEffect(() => {
-        getAllUsers().then(x => setUsers(x.concat(new Array(20).fill(0).map(() => ({ username: Math.random().toFixed(9).slice(2, 9).split('').map(x => String.fromCharCode("a".charCodeAt(0) + parseInt(x))).join(''), "gam-bits": Math.floor(Math.random() * 6000), team: Math.round(Math.random()), createdAt: { seconds: (Date.now() / 1000) - Math.floor(Math.random() * 2628000) } })))));
+        var filter = params.get('filter');
+        console.log(filter)
+        getAllUsers().then(x => setUsers(x.concat(new Array(20).fill(0).map(() => ({ username: Math.random().toFixed(9).slice(2, 9).split('').map(x => String.fromCharCode("a".charCodeAt(0) + parseInt(x))).join(''), "gam-bits": Math.floor(Math.random() * 6000), team: Math.round(Math.random()), createdAt: { seconds: (Date.now() / 1000) - Math.floor(Math.random() * 2628000) } }))).sort(({ "gam-bits": gambitsA }, { "gam-bits": gambitsB }) => gambitsB - gambitsA)
+            .filter(({ team }) => {
+                return filter ? TEAMS[team] == TEAMS.find(x => x.toLowerCase() == filter) : true
+        }).map((x, i) => ({ ...x, rank: i + 1 }))));
     }, []);
+    useEffect(() => {
+        switch (sort) {
+            case "createdAt": setUsers([...users.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds)]); break;
+            case "rank": setUsers([...users.sort((a, b) => b["gam-bits"] - a["gam-bits"])]); break;
+            case "username": setUsers([...users.sort((a, b) => a.username.toLowerCase() < b.username.toLowerCase() ? -1 : a.username.toLowerCase() > b.username.toLowerCase() ? 1 : 0)]); break;
+            default: setUsers([...users.sort((a, b) => b[sort] - a[sort])]);
+        }
+    }, [sort]);
+    const handleSort = (Sort) => {
+        if (Sort == sort && (sort != "team")) setUsers([...users.reverse()])
+        else setSort(Sort);
+        console.log(Sort, sort, Sort == sort)
+    }
     return (
         <>
             <Nav {...props} />
@@ -33,7 +54,7 @@ const Leaderboard = (props) => {
                         const totalBits = users.filter(x => x.team == team).map(x => x['gam-bits']).reduce((a, b) => a + b, 0);
                         const winning = users.filter(x => x.team != team).map(x => x['gam-bits']).reduce((a, b) => a + b, 0) < totalBits;
                         return (
-                            <div className={`team${winning ? " winning" : ''}`} key={team}>
+                            <div onClick={() => navigate(`?filter=${TEAMS[team].toLowerCase()}`)} className={`team${winning ? " winning" : ''}`} key={team}>
                                 <h2>{TEAMS[team]}</h2>
                                 <span className="totalBits">{totalBits}</span>
                             </div>
@@ -45,20 +66,34 @@ const Leaderboard = (props) => {
                 <table className="leaderboard">
                     <thead>
                         <tr>
-                            <th>Rank</th>
-                            <th>Username</th>
-                            <th>Gam-Bits</th>
-                            <th>Team</th>
-                            <th>Joined</th>
+                            <th onClick={() => handleSort('rank')}>
+                                <span className="sortTooltip">Sort by Rank</span>
+                                Rank
+                            </th>
+                            <th onClick={() => handleSort('username')}>
+                                <span className="sortTooltip">Sort by Username</span>
+                                Username
+                            </th>
+                            <th onClick={() => handleSort('gam-bits')}>
+                                <span className="sortTooltip">Sort by Gam-Bits</span>
+                                Gam-Bits
+                            </th>
+                            <th onClick={() => handleSort('team')}>
+                                <span className="sortTooltip">Sort by Team</span>
+                                Team
+                            </th>
+                            <th onClick={() => handleSort('createdAt')}>
+                                <span className="sortTooltip">Sort by Joined</span>
+                                Joined
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
                         {
-                            users.sort(({ "gam-bits": gambitsA }, { "gam-bits": gambitsB }) => gambitsB - gambitsA).map(({ username, "gam-bits": gambits, team, createdAt: { seconds } }, index) => {
+                            users.slice(0, 15).map(({ username, "gam-bits": gambits, team, createdAt: { seconds }, rank }) => {
                                 return (
-                                    index <= 14 &&
-                                    <tr className={username == currentUser.displayName ? "active" : ''} key={index}>
-                                        <td>{index + 1}</td>
+                                    <tr className={username == currentUser.displayName ? "active" : ''} key={rank}>
+                                        <td>{rank}</td>
                                         <td>{username}</td>
                                         <td>{gambits}</td>
                                         <td>{TEAMS[team]}</td>
