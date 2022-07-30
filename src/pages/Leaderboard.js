@@ -24,12 +24,8 @@ const Leaderboard = (props) => {
     const [params, setParams] = useSearchParams();
     const navigate = useNavigate();
     useEffect(() => {
-        var filter = params.get('filter');
-        console.log(filter)
         getAllUsers().then(x => setUsers(x.concat(new Array(20).fill(0).map(() => ({ username: Math.random().toFixed(9).slice(2, 9).split('').map(x => String.fromCharCode("a".charCodeAt(0) + parseInt(x))).join(''), "gam-bits": Math.floor(Math.random() * 6000), team: Math.round(Math.random()), createdAt: { seconds: (Date.now() / 1000) - Math.floor(Math.random() * 2628000) } }))).sort(({ "gam-bits": gambitsA }, { "gam-bits": gambitsB }) => gambitsB - gambitsA)
-            .filter(({ team }) => {
-                return filter ? TEAMS[team] == TEAMS.find(x => x.toLowerCase() == filter) : true
-        }).map((x, i) => ({ ...x, rank: i + 1 }))));
+            .map((x, i) => ({ ...x, rank: i + 1 }))));
     }, []);
     useEffect(() => {
         switch (sort) {
@@ -40,9 +36,8 @@ const Leaderboard = (props) => {
         }
     }, [sort]);
     const handleSort = (Sort) => {
-        if (Sort == sort && (sort != "team")) setUsers([...users.reverse()])
+        if (Sort == sort) setUsers([...users.reverse()]);
         else setSort(Sort);
-        console.log(Sort, sort, Sort == sort)
     }
     return (
         <>
@@ -78,10 +73,7 @@ const Leaderboard = (props) => {
                                 <span className="sortTooltip">Sort by Gam-Bits</span>
                                 Gam-Bits
                             </th>
-                            <th onClick={() => handleSort('team')}>
-                                <span className="sortTooltip">Sort by Team</span>
-                                Team
-                            </th>
+                            <th>Team</th>
                             <th onClick={() => handleSort('createdAt')}>
                                 <span className="sortTooltip">Sort by Joined</span>
                                 Joined
@@ -90,7 +82,9 @@ const Leaderboard = (props) => {
                     </thead>
                     <tbody>
                         {
-                            users.slice(0, 15).map(({ username, "gam-bits": gambits, team, createdAt: { seconds }, rank }) => {
+                            users.filter(({ team }) => {
+                                return params.get('filter') ? TEAMS[team] == TEAMS.find(x => x.toLowerCase() == params.get('filter')) : true
+                            }).slice(0, 15).map(({ username, "gam-bits": gambits, team, createdAt: { seconds }, rank }) => {
                                 return (
                                     <tr className={username == currentUser.displayName ? "active" : ''} key={rank}>
                                         <td>{rank}</td>
