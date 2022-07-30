@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Nav from "../Nav";
 import { useAuth } from "../context/AuthContext";
@@ -58,7 +58,7 @@ const Leaderboard = (props) => {
         else setSort(Sort);
     }
 
-    window.page = () => setPage(oldPage => Math.min(oldPage + 1, Math.ceil(allUsers.length/15)));
+    window.page = () => setPage(oldPage => Math.min(oldPage + 1, Math.ceil(allUsers.length / 15)));
     window.getPage = () => page;
     return (
         <>
@@ -117,6 +117,11 @@ const Leaderboard = (props) => {
                         }
                     </tbody>
                 </table>
+                {
+                    page < Math.ceil(allUsers.length / 15) && <div onClick={() => setPage(oldPage => Math.min(oldPage + 1, Math.ceil(allUsers.length / 15)))} key="loadMore" className="loadUsers">
+                        Load more users
+                    </div>
+                }
             </div>
         </>
     )

@@ -108,3 +108,10 @@
     margin-inline: auto;
     width: fit-content;
 }
+
+.loadUsers {
+    margin-top: -2rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    text-decoration: underline;
+}
