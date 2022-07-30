@@ -20,21 +20,23 @@ const relatime = (elapsed) => {
 const Leaderboard = (props) => {
     const [users, setUsers] = useState([]);
     const [sort, setSort] = useState('');
+    const [page, setPage] = useState(1);
+
     const { currentUser, getAllUsers } = useAuth();
     const [params, setParams] = useSearchParams();
+
     const navigate = useNavigate();
+
     useEffect(() => {
-        const fakeUsers = new Array(20).fill(0).map(() => ({ username: Math.random().toFixed(9).slice(2, 9).split('').map(x => String.fromCharCode("a".charCodeAt(0) + parseInt(x))).join(''), "gam-bits": Math.floor(Math.random() * 6000), team: Math.round(Math.random()), createdAt: { seconds: (Date.now() / 1000) - Math.floor(Math.random() * 2628000) } }));
-        getAllUsers()
-            .then(x => {
-                return setUsers(
-                    x
-                        .concat(fakeUsers)
-                        .sort(({ "gam-bits": gambitsA }, { "gam-bits": gambitsB }) => gambitsB - gambitsA)
-                        .map((x, i) => ({ ...x, rank: i + 1 }))
-                );
-            });
+        const fakeUsers = new Array(50 - 3).fill(0).map(() => ({ username: Math.random().toFixed(9).slice(2, 9).split('').map(x => String.fromCharCode("a".charCodeAt(0) + parseInt(x))).join(''), "gam-bits": Math.floor(Math.random() * 6000), team: Math.round(Math.random()), createdAt: { seconds: (Date.now() / 1000) - Math.floor(Math.random() * 2628000) } })); // create 50 (minus 3 real current users) fake users
+        getAllUsers() // grab the user database
+            .then(x => x
+                .concat(fakeUsers) // add fake users to list for some scroll space
+                .sort(({ "gam-bits": gambitsA }, { "gam-bits": gambitsB }) => gambitsB - gambitsA) // sort list by amount of bits they have
+                .map((x, i) => ({ ...x, rank: i + 1 })) // give each user a rank based on their place in the list
+            ).then(setUsers); // set users state to list
     }, []);
+
     useEffect(() => {
         switch (sort) {
             case "createdAt": setUsers([...users.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds)]); break;
@@ -43,6 +45,7 @@ const Leaderboard = (props) => {
             default: setUsers([...users.sort((a, b) => b[sort] - a[sort])]);
         }
     }, [sort]);
+
     const handleSort = (Sort) => {
         if (Sort == sort) setUsers([...users.reverse()]);
         else setSort(Sort);
@@ -92,7 +95,7 @@ const Leaderboard = (props) => {
                         {
                             users.filter(({ team }) => {
                                 return params.get('filter') ? TEAMS[team] == TEAMS.find(x => x.toLowerCase() == params.get('filter')) : true
-                            }).slice(0, 15).map(({ username, "gam-bits": gambits, team, createdAt: { seconds }, rank }) => {
+                            }).slice(0, 15 * page).map(({ username, "gam-bits": gambits, team, createdAt: { seconds }, rank }) => {
                                 return (
                                     <tr className={username == currentUser.displayName ? "active" : ''} key={rank}>
                                         <td>{rank}</td>
