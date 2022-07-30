@@ -1,3 +1,8 @@
+@a(USER SECURITY IDEAS)
+bits must be equal to bit history (if not set bits to collective history)
+daily bit limit of 5k
+if user has more bits than daily limit and joined at date could allow, mark as cheater
+
 UI Design
 Design consistant interface
 Apply interface to all games
