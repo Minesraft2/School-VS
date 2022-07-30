@@ -24,8 +24,16 @@ const Leaderboard = (props) => {
     const [params, setParams] = useSearchParams();
     const navigate = useNavigate();
     useEffect(() => {
-        getAllUsers().then(x => setUsers(x.concat(new Array(20).fill(0).map(() => ({ username: Math.random().toFixed(9).slice(2, 9).split('').map(x => String.fromCharCode("a".charCodeAt(0) + parseInt(x))).join(''), "gam-bits": Math.floor(Math.random() * 6000), team: Math.round(Math.random()), createdAt: { seconds: (Date.now() / 1000) - Math.floor(Math.random() * 2628000) } }))).sort(({ "gam-bits": gambitsA }, { "gam-bits": gambitsB }) => gambitsB - gambitsA)
-            .map((x, i) => ({ ...x, rank: i + 1 }))));
+        const fakeUsers = new Array(20).fill(0).map(() => ({ username: Math.random().toFixed(9).slice(2, 9).split('').map(x => String.fromCharCode("a".charCodeAt(0) + parseInt(x))).join(''), "gam-bits": Math.floor(Math.random() * 6000), team: Math.round(Math.random()), createdAt: { seconds: (Date.now() / 1000) - Math.floor(Math.random() * 2628000) } }));
+        getAllUsers()
+            .then(x => {
+                return setUsers(
+                    x
+                        .concat(fakeUsers)
+                        .sort(({ "gam-bits": gambitsA }, { "gam-bits": gambitsB }) => gambitsB - gambitsA)
+                        .map((x, i) => ({ ...x, rank: i + 1 }))
+                );
+            });
     }, []);
     useEffect(() => {
         switch (sort) {
@@ -49,7 +57,7 @@ const Leaderboard = (props) => {
                         const totalBits = users.filter(x => x.team == team).map(x => x['gam-bits']).reduce((a, b) => a + b, 0);
                         const winning = users.filter(x => x.team != team).map(x => x['gam-bits']).reduce((a, b) => a + b, 0) < totalBits;
                         return (
-                            <div onClick={() => navigate(`?filter=${TEAMS[team].toLowerCase()}`)} className={`team${winning ? " winning" : ''}`} key={team}>
+                            <div onClick={() => navigate(params.get('filter') === TEAMS[team].toLowerCase() ? `` : `?filter=${TEAMS[team].toLowerCase()}`)} className={`team${winning ? " winning" : ''}`} key={team}>
                                 <h2>{TEAMS[team]}</h2>
                                 <span className="totalBits">{totalBits}</span>
                             </div>
