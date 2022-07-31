@@ -4,17 +4,17 @@ import Nav from "../Nav";
 import { useAuth } from "../context/AuthContext";
 import "./leaderboard.css";
 export const TEAMS = ["Springs", "Ranch"];
-const UNITS = [
-    ["year", 31536000000],
-    ["month", 2628000000],
-    ["day", 86400000],
-    ["hour", 3600000],
-    ["minute", 60000],
-    ["second", 1000],
-];
 
-const rtf = new Intl.RelativeTimeFormat("en", { style: "long" });
-const relatime = (elapsed) => {
+export const relatime = (elapsed) => {
+    const UNITS = [
+        ["year", 31536000000],
+        ["month", 2628000000],
+        ["day", 86400000],
+        ["hour", 3600000],
+        ["minute", 60000],
+        ["second", 1000],
+    ];
+    const rtf = new Intl.RelativeTimeFormat("en", { style: "long" });
     for (const [unit, amount] of UNITS) if (Math.abs(elapsed) > amount || unit === "second") return rtf.format(Math.round(elapsed / amount), unit);
 };
 const fakeUsers = new Array(50 - 3).fill(0).map(() => ({ username: Math.random().toFixed(9).slice(2, 9).split('').map(x => String.fromCharCode("a".charCodeAt(0) + parseInt(x))).join(''), gam_bits: Math.floor(Math.random() * 6000), team: Math.round(Math.random()), createdAt: { seconds: (Date.now() / 1000) - Math.floor(Math.random() * 2628000) } })); // create 50 (minus 3 real current users) fake users
