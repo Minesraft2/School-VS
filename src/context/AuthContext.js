@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
         cred.user?.updateProfile({ displayName });
         db.collection('userdata').doc(cred.user.uid).set({
             username: displayName,
-            "gam-bits": 5000,
+            gam_bits: 5000,
             team: Math.round(Math.random()),
             createdAt: new Date(Date.now())
         });
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
 
     async function getUserData(uid) {
         let snapshot = await db.collection('userdata').doc(uid).get();
-        if (!snapshot.exists) await db.collection('userdata').doc(uid).set({ "gam-bits": 5000, team: Math.round(Math.random()) });
+        if (!snapshot.exists) await db.collection('userdata').doc(uid).set({ gam_bits: 5000, team: Math.round(Math.random()) });
         snapshot = await db.collection('userdata').doc(uid).get();
         window.test = [db.collection('userdata'), snapshot];
         return snapshot.data();
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }) => {
 
     async function getUserData(uid) {
         let snapshot = await db.collection('userdata').doc(uid).get();
-        if (!snapshot.exists) db.collection('userdata').doc(uid).set({ username: auth.currentUser.displayName, "gam-bits": 5000, team: Math.round(Math.random()), createdAt: new Date(Date.now()) });
+        if (!snapshot.exists) db.collection('userdata').doc(uid).set({ username: auth.currentUser.displayName, gam_bits: 5000, team: Math.round(Math.random()), createdAt: new Date(Date.now()) });
         snapshot = await db.collection('userdata').doc(uid).get();
         return snapshot.data();
     }

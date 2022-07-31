@@ -17,7 +17,7 @@ const rtf = new Intl.RelativeTimeFormat("en", { style: "long" });
 const relatime = (elapsed) => {
     for (const [unit, amount] of UNITS) if (Math.abs(elapsed) > amount || unit === "second") return rtf.format(Math.round(elapsed / amount), unit);
 };
-const fakeUsers = new Array(50 - 3).fill(0).map(() => ({ username: Math.random().toFixed(9).slice(2, 9).split('').map(x => String.fromCharCode("a".charCodeAt(0) + parseInt(x))).join(''), "gam-bits": Math.floor(Math.random() * 6000), team: Math.round(Math.random()), createdAt: { seconds: (Date.now() / 1000) - Math.floor(Math.random() * 2628000) } })); // create 50 (minus 3 real current users) fake users
+const fakeUsers = new Array(50 - 3).fill(0).map(() => ({ username: Math.random().toFixed(9).slice(2, 9).split('').map(x => String.fromCharCode("a".charCodeAt(0) + parseInt(x))).join(''), gam_bits: Math.floor(Math.random() * 6000), team: Math.round(Math.random()), createdAt: { seconds: (Date.now() / 1000) - Math.floor(Math.random() * 2628000) } })); // create 50 (minus 3 real current users) fake users
 const Leaderboard = (props) => {
     const [users, setUsers] = useState([]);
     const [allUsers, setAllUsers] = useState([]);
@@ -33,7 +33,7 @@ const Leaderboard = (props) => {
         getAllUsers() // grab the user database
             .then(users => setAllUsers(users
                 .concat(fakeUsers) // add fake users to list for some scroll space
-                .sort(({ "gam-bits": gambitsA }, { "gam-bits": gambitsB }) => gambitsB - gambitsA) // sort list by amount of bits they have
+                .sort(({ gam_bits: gambitsA }, { gam_bits: gambitsB }) => gambitsB - gambitsA) // sort list by amount of bits they have
                 .map((x, i) => ({ ...x, rank: i + 1 })) // give each user a rank based on their place in the list
             )) // set users state to list
     }, []);
@@ -46,7 +46,7 @@ const Leaderboard = (props) => {
     useEffect(() => {
         switch (sort) {
             case "createdAt": setUsers([...users.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds)]); break;
-            case "rank": setUsers([...users.sort((a, b) => b["gam-bits"] - a["gam-bits"])]); break;
+            case "rank": setUsers([...users.sort((a, b) => b.gam_bits - a.gam_bits)]); break;
             case "username": setUsers([...users.sort((a, b) => a.username.toLowerCase() < b.username.toLowerCase() ? -1 : a.username.toLowerCase() > b.username.toLowerCase() ? 1 : 0)]); break;
             default: setUsers([...users.sort((a, b) => b[sort] - a[sort])]);
         }
@@ -67,8 +67,8 @@ const Leaderboard = (props) => {
             <div>
                 {
                     [0, 1].map((team) => {
-                        const totalBits = allUsers.filter(x => x.team == team).map(x => x['gam-bits']).reduce((a, b) => a + b, 0);
-                        const winning = allUsers.filter(x => x.team != team).map(x => x['gam-bits']).reduce((a, b) => a + b, 0) < totalBits;
+                        const totalBits = allUsers.filter(x => x.team == team).map(x => x.gam_bits).reduce((a, b) => a + b, 0);
+                        const winning = allUsers.filter(x => x.team != team).map(x => x.gam_bits).reduce((a, b) => a + b, 0) < totalBits;
                         return (
                             <div onClick={() => navigate(params.get('filter') === TEAMS[team].toLowerCase() ? `` : `?filter=${TEAMS[team].toLowerCase()}`)} className={`team${winning ? " winning" : ''}`} key={team}>
                                 <h2>{TEAMS[team]}</h2>
@@ -90,7 +90,7 @@ const Leaderboard = (props) => {
                                 <span className="sortTooltip">Sort by Username</span>
                                 Username
                             </th>
-                            <th onClick={() => handleSort('gam-bits')}>
+                            <th onClick={() => handleSort('gam_bits')}>
                                 <span className="sortTooltip">Sort by Gam-Bits</span>
                                 Gam-Bits
                             </th>
@@ -103,12 +103,12 @@ const Leaderboard = (props) => {
                     </thead>
                     <tbody>
                         {
-                            users.slice(0, 15 * page).map(({ username, "gam-bits": gambits, team, createdAt: { seconds }, rank }) => {
+                            users.slice(0, 15 * page).map(({ username, gam_bits, team, createdAt: { seconds }, rank }) => {
                                 return (
                                     <tr className={username == currentUser.displayName ? "active" : ''} key={rank}>
                                         <td>{rank}</td>
                                         <td>{username}</td>
-                                        <td>{gambits}</td>
+                                        <td>{gam_bits}</td>
                                         <td>{TEAMS[team]}</td>
                                         <td>{relatime(seconds * 1000 - Date.now())}</td>
                                     </tr>
@@ -118,7 +118,7 @@ const Leaderboard = (props) => {
                     </tbody>
                 </table>
                 {
-                    page < Math.ceil(allUsers.length / 15) && <div onClick={() => setPage(oldPage => Math.min(oldPage + 1, Math.ceil(allUsers.length / 15)))} key="loadMore" className="loadUsers">
+                    page < Math.ceil(users.length / 15) && <div onClick={() => setPage(oldPage => Math.min(oldPage + 1, Math.ceil(users.length / 15)))} key="loadMore" className="loadUsers">
                         Load more users
                     </div>
                 }
