@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Nav from "../Nav";
 import { useAuth } from "../context/AuthContext";
 import "./leaderboard.css";
-const TEAMS = ["Springs", "Ranch"];
+export const TEAMS = ["Springs", "Ranch"];
 const UNITS = [
     ["year", 31536000000],
     ["month", 2628000000],
