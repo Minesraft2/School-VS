@@ -64,8 +64,10 @@ export const AuthProvider = ({ children }) => {
         return snapshot.data();
     }
 
-    function updateUserData(data) {
-        return db.collection('userdata').doc(uid).update(data);
+    async function updateUserData(data) {
+        const userdata = await db.collection('userdata').doc(currentUser.uid).update(data);
+        getUserData(currentUser.uid).then(setUserData);
+        return userdata;
     }
 
     async function getAllUsers() {

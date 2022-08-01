@@ -9,6 +9,8 @@
     align-items: center;
     vertical-align: middle;
     width: 40%;
+    max-width: 28rem;
+    min-width: 18rem;
     position: absolute;
     left: 0
 }
@@ -36,4 +38,20 @@ h3 {
 .userData * {
     display: block;
     /* text-align: left; */
+}
+
+.homeButton {
+    margin-top: 0.5rem;
+    margin-inline: auto;
+    border: none;
+    padding: 5px;
+    padding-inline: 15px;
+    border-radius: 5px;
+    background-color: rgb(64, 192, 255);
+    color: white;
+    transition: 0.2s;
+}
+
+.homeButton:hover {
+    transform: scale(1.05);
 }

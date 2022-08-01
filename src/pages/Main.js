@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Nav from "../Nav";
 import { useAuth } from "../context/AuthContext";
 import "./Main.css";
 import { TEAMS, relatime } from "./Leaderboard";
 const Home = (props) => {
-    const { currentUser, userData } = useAuth();
+    const { currentUser, userData, updateUserData } = useAuth();
     return (<>
         <Nav />
         <div className="profile">
@@ -16,6 +16,9 @@ const Home = (props) => {
                 <div className="userData">
                     <span>Gam-Bits: {userData?.gam_bits}</span>
                     <span>Team: {TEAMS[userData?.team]}</span>
+                    <button className="homeButton" onClick={() => {
+                        updateUserData({ team: Number(!userData?.team) });
+                    }}>Switch Team</button>
                 </div>
             </div>
         </div>
